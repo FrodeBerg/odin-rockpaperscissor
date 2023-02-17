@@ -7,19 +7,67 @@
     <title>Rock paper scissor</title>
 </head>
 <script>
+
+    let choices = ["rock", "paper", "scissor"];
+
     function getComuputerChoice(){
-
+        // Random float between 0 and 3
+        let random = Math.random() * 3;
+        // To int
+        random = Math.floor(random);
+        // return random choice
+        return choices[random];
     }
-    function playRound(playerSelection, computerSelection) {
 
+    function playRound(playerSelection, computerSelection) {
+        if (playerSelection === computerSelection) return 0;
+        switch (playerSelection){
+            case "rock":
+                if (computerSelection == "paper") return -1;
+                break
+            case "paper":
+                if (computerSelection == "scissor") return -1;
+                break
+            case "scissor":
+                if (computerSelection == "rock") return -1;
+                break
+        }
+        return 1;
     }
 
     function game(){
-        const playerSelection = prompt("Rock, Paper or Scissor?").toLowerCase();
-        const computerSelection = getComuputerChoice();        
+
+        let playerScore = 0;
+
+        for (let i = 0; i < 5; i++) {
+            // Ensure user types rock, paper or scissor 
+            let playerSelection = "";
+            do {
+                playerSelection = prompt("Rock, Paper or Scissor?").toLowerCase();
+            } while (!choices.includes(playerSelection))
+            const computerSelection = getComuputerChoice();  
+
+            let result = playRound(playerSelection, computerSelection);
+            playerScore += result;
+            switch (result){
+                case 1:
+                    console.log(`You Win, ${playerSelection} beats ${computerSelection}`)
+                    break
+                case 0:
+                    console.log(`Tie, both chose ${playerSelection}`);
+                    break
+                case -1: 
+                    console.log(`You Lose, ${computerSelection} beats ${playerSelection}`)
+            }            
+        }
+
+        let finalResult = "Tie!";
+        if (playerScore > 0) finalResult = "Player Wins!";
+        if (playerScore < 0) finalResult = "Computer Wins!";
+        console.log(finalResult)
     }
 
-
+    game();
 
 </script>
 <body>
