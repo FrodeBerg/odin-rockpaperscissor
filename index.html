@@ -5,10 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rock paper scissor</title>
+    
 </head>
 <script>
 
     let choices = ["rock", "paper", "scissor"];
+
+    let playerScore = 0;
+    let computerScore = 0;
 
     function getComuputerChoice(){
         // Random float between 0 and 3
@@ -19,58 +23,66 @@
         return choices[random];
     }
 
-    function playRound(playerSelection, computerSelection) {
-        if (playerSelection === computerSelection) return 0;
+    function playRound(playerSelection) {
+        let computerSelection = getComuputerChoice();
+        let roundResult = result(playerSelection, computerSelection);
+        let message = `Tie! Both chose: ${playerSelection}`;
+        if (roundResult == "Win") {
+            playerScore += 1;
+            message = `You Win! ${playerSelection} beats ${computerSelection}`;
+        }
+        if (roundResult == "Lose") {
+            computerScore += 1;
+            message = `You Lose! ${computerSelection} beats ${playerSelection}`;
+        }
+
+        let messageDisplay = document.getElementById("messageDisplay");
+        let computerDisplay = document.getElementById("computerDisplay");
+        let playerDisplay = document.getElementById("playerDisplay");
+
+        messageDisplay.textContent = message;
+        computerDisplay.textContent = `Computer score: ${computerScore}`;
+        playerDisplay.textContent = `Player score: ${playerScore}`;
+
+        if (playerScore === 5){
+            alert("Player Wins!");
+            computerScore = 0;
+            playerScore = 0;
+        }
+        if (computerScore === 5){
+            alert("Computer Wins!");
+            computerScore = 0;
+            playerScore = 0;
+        }
+    }
+
+    function result(playerSelection, computerSelection) {
+        if (playerSelection === computerSelection) return "Tie";
         switch (playerSelection){
             case "rock":
-                if (computerSelection == "paper") return -1;
+                if (computerSelection == "paper") return "Lose";
                 break
             case "paper":
-                if (computerSelection == "scissor") return -1;
+                if (computerSelection == "scissor") return "Lose";
                 break
             case "scissor":
-                if (computerSelection == "rock") return -1;
+                if (computerSelection == "rock") return "Lose";
                 break
         }
-        return 1;
+        return "Win";
     }
-
-    function game(){
-
-        let playerScore = 0;
-
-        for (let i = 0; i < 5; i++) {
-            // Ensure user types rock, paper or scissor 
-            let playerSelection = "";
-            do {
-                playerSelection = prompt("Rock, Paper or Scissor?").toLowerCase();
-            } while (!choices.includes(playerSelection))
-            const computerSelection = getComuputerChoice();  
-
-            let result = playRound(playerSelection, computerSelection);
-            playerScore += result;
-            switch (result){
-                case 1:
-                    console.log(`You Win, ${playerSelection} beats ${computerSelection}`)
-                    break
-                case 0:
-                    console.log(`Tie, both chose ${playerSelection}`);
-                    break
-                case -1: 
-                    console.log(`You Lose, ${computerSelection} beats ${playerSelection}`)
-            }            
-        }
-
-        let finalResult = "Tie!";
-        if (playerScore > 0) finalResult = "Player Wins!";
-        if (playerScore < 0) finalResult = "Computer Wins!";
-        console.log(finalResult)
-    }
-
-    game();
 
 </script>
 <body>
-    
+    <div class="options">
+        <button onclick="playRound('rock')">Rock</button>
+        <button onclick="playRound('paper')">Paper</button>
+        <button onclick="playRound('scissor')">Scissor</button>
+    </div>
+    <div>
+        <h2 id="messageDisplay"></h2>
+        <h3 id="playerDisplay"></h3>
+        <h3 id="computerDisplay"></h3>
+    </div>
 </body>
 </html>
